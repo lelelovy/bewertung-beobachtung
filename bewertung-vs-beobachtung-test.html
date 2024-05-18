@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.5.4.2 (MacOSX)"/>
+	<meta name="created" content="2024-05-18T11:36:39.055878157"/>
+	<meta name="changed" content="2024-05-18T11:40:59.527570312"/>
+</head>
+<body lang="de-DE" dir="ltr"><p>&lt;!DOCTYPE html&gt;</p>
+<p>&lt;html lang=&quot;de&quot;&gt;</p>
+<p>&lt;head&gt;</p>
+<p>&lt;meta charset=&quot;UTF-8&quot;&gt;</p>
+<p>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+initial-scale=1.0&quot;&gt;</p>
+<p>&lt;title&gt;Bewertung oder Beobachtung&lt;/title&gt;</p>
+<p>&lt;style&gt;</p>
+<p>    .correct {</p>
+<p>        color: green;</p>
+<p>    }</p>
+<p>    .incorrect {</p>
+<p>        color: red;</p>
+<p>    }</p>
+<p>    .hidden {</p>
+<p>        display: none;</p>
+<p>    }</p>
+<p>&lt;/style&gt;</p>
+<p>&lt;/head&gt;</p>
+<p>&lt;body&gt;</p>
+<p>&lt;h2&gt;Bewertung oder Beobachtung&lt;/h2&gt;</p>
+<p>&lt;div id=&quot;test-container&quot;&gt;&lt;/div&gt;</p>
+<p>&lt;button onclick=&quot;submitTest()&quot;&gt;Test
+abschließen&lt;/button&gt;</p>
+<p>&lt;p id=&quot;final-result&quot;&gt;&lt;/p&gt;</p>
+<p><br/>
+<br/>
+
+</p>
+<p>&lt;script&gt;</p>
+<p>const sentences = [</p>
+<p>    { text: &quot;Er ist chaotisch.&quot;, correctAnswer:
+&quot;bewertung&quot;, example: &quot;Sein Schreibtisch ist mit
+Stapeln von ungeordneten Papieren bedeckt.&quot; },</p>
+<p>    { text: &quot;Sie hat den Raum betreten, ohne jemanden zu
+grüßen.&quot;, correctAnswer: &quot;beobachtung&quot;, example: &quot;&quot;
+},</p>
+<p>    { text: &quot;Er ist faul.&quot;, correctAnswer: &quot;bewertung&quot;,
+example: &quot;Er hat von 9 Uhr morgens bis 17 Uhr abends auf der
+Couch gelegen.&quot; },</p>
+<p>    { text: &quot;Sie spricht ständig über ihre Erfolge.&quot;,
+correctAnswer: &quot;bewertung&quot;, example: &quot;Sie hat heute 3
+Mal von ihrem Bestseller erzählt&quot; },</p>
+<p>    { text: &quot;Er kam 20 Minuten später als verabredet zum
+Meeting.&quot;, correctAnswer: &quot;beobachtung&quot;, example: &quot;&quot;
+},</p>
+<p>    { text: &quot;Sie ist verantwortungslos.&quot;, correctAnswer:
+&quot;bewertung&quot;, example: &quot;Sie hat gestern Abend den
+Schlüssel im Türschloss stecken lassen.&quot; },</p>
+<p>    { text: &quot;Er spricht nicht mit ihr seit ihrem Streit vor
+einem Monat.&quot;, correctAnswer: &quot;beobachtung&quot;, example:
+&quot;&quot; },</p>
+<p>    { text: &quot;Sie hat diese Woche drei neue, Kleider
+gekauft.&quot;, correctAnswer: &quot;beobachtung&quot;, example: &quot;&quot;
+},</p>
+<p>    { text: &quot;Er ist egoistisch.&quot;, correctAnswer:
+&quot;bewertung&quot;, example: &quot;Er nahm sich die größte
+Portion vom Essen.&quot; },</p>
+<p>    { text: &quot;Sie hat gestern Nacht um 24 Uhr laute Musik
+gespielt, während alle anderen geschlafen haben.&quot;,
+correctAnswer: &quot;beobachtung&quot;, example: &quot;&quot; }</p>
+<p>];</p>
+<p><br/>
+<br/>
+
+</p>
+<p>function createTest() {</p>
+<p>    const container = document.getElementById('test-container');</p>
+<p>    sentences.forEach((sentence, index) =&gt; {</p>
+<p>        const div = document.createElement('div');</p>
+<p>        div.className = 'sentence-block';</p>
+<p>        div.innerHTML = `</p>
+<p>            &lt;p&gt;${index + 1}. ${sentence.text}&lt;/p&gt;</p>
+<p>            &lt;input type=&quot;radio&quot;
+id=&quot;bewertung${index}&quot; name=&quot;choice${index}&quot;
+value=&quot;bewertung&quot;&gt;</p>
+<p>            &lt;label for=&quot;bewertung${index}&quot;&gt;Bewertung&lt;/label&gt;</p>
+<p>            &lt;input type=&quot;radio&quot;
+id=&quot;beobachtung${index}&quot; name=&quot;choice${index}&quot;
+value=&quot;beobachtung&quot;&gt;</p>
+<p>            &lt;label
+for=&quot;beobachtung${index}&quot;&gt;Beobachtung&lt;/label&gt;&lt;br&gt;</p>
+<p>            &lt;textarea id=&quot;observation${index}&quot;
+class=&quot;hidden&quot; placeholder=&quot;Formuliere eine
+Beobachtung...&quot;&gt;&lt;/textarea&gt;</p>
+<p>            &lt;button
+onclick=&quot;checkAnswer(${index})&quot;&gt;Überprüfen&lt;/button&gt;</p>
+<p>            &lt;p id=&quot;result${index}&quot;&gt;&lt;/p&gt;</p>
+<p>            &lt;p id=&quot;example${index}&quot;
+class=&quot;hidden&quot;&gt;&lt;/p&gt;</p>
+<p>        `;</p>
+<p>        container.appendChild(div);</p>
+<p>    });</p>
+<p>}</p>
+<p><br/>
+<br/>
+
+</p>
+<p>function checkAnswer(index) {</p>
+<p>    const sentence = sentences[index];</p>
+<p>    const chosenOption =
+document.querySelector(`input[name=&quot;choice${index}&quot;]:checked`);</p>
+<p>    const result = document.getElementById(`result${index}`);</p>
+<p>    const example = document.getElementById(`example${index}`);</p>
+<p>    const observationTextarea =
+document.getElementById(`observation${index}`);</p>
+<p><br/>
+<br/>
+
+</p>
+<p>    if (!chosenOption) {</p>
+<p>        result.innerText = &quot;Bitte wähle eine Option.&quot;;</p>
+<p>        result.className = &quot;&quot;;</p>
+<p>        return;</p>
+<p>    }</p>
+<p><br/>
+<br/>
+
+</p>
+<p>    if (chosenOption.value === sentence.correctAnswer) {</p>
+<p>        result.innerText = &quot;Richtig!&quot;;</p>
+<p>        result.className = &quot;correct&quot;;</p>
+<p>    } else {</p>
+<p>        result.innerText = &quot;Falsch!&quot;;</p>
+<p>        result.className = &quot;incorrect&quot;;</p>
+<p>    }</p>
+<p><br/>
+<br/>
+
+</p>
+<p>    example.innerText = `Eine mögliche Beobachtung wäre:
+${sentence.example}`;</p>
+<p>    example.classList.remove(&quot;hidden&quot;);</p>
+<p><br/>
+<br/>
+
+</p>
+<p>    if (chosenOption.value === &quot;bewertung&quot;) {</p>
+<p>        observationTextarea.classList.remove(&quot;hidden&quot;);</p>
+<p>    } else {</p>
+<p>        observationTextarea.classList.add(&quot;hidden&quot;);</p>
+<p>    }</p>
+<p>}</p>
+<p><br/>
+<br/>
+
+</p>
+<p>function submitTest() {</p>
+<p>    const finalResult = document.getElementById(&quot;final-result&quot;);</p>
+<p>    let score = 0;</p>
+<p>    
+</p>
+<p>    sentences.forEach((sentence, index) =&gt; {</p>
+<p>        const chosenOption =
+document.querySelector(`input[name=&quot;choice${index}&quot;]:checked`);</p>
+<p>        if (chosenOption &amp;&amp; chosenOption.value ===
+sentence.correctAnswer) {</p>
+<p>            score++;</p>
+<p>        }</p>
+<p>    });</p>
+<p><br/>
+<br/>
+
+</p>
+<p>    finalResult.innerText = `Sie haben ${score} von
+${sentences.length} richtig beantwortet.`;</p>
+<p>}</p>
+<p><br/>
+<br/>
+
+</p>
+<p>createTest();</p>
+<p>&lt;/script&gt;</p>
+<p>&lt;/body&gt;</p>
+<p>&lt;/html&gt;</p>
+</body>
+</html>
